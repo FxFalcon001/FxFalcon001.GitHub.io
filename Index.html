@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="meta.title">Sergio Restrepo Santos — Portafolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0B;
+    --panel:#141416;
+    --line:#2C2C2F;
+    --text:#F3EFE6;
+    --muted:#9B9690;
+    --accent:#D4AF37;
+    --accent-2:#1F7A5C;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    line-height:1.6;
+  }
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px;}
+  h1,h2,h3,.mono{font-family:'IBM Plex Mono', monospace;}
+
+  header{
+    position:sticky; top:0; z-index:10;
+    background:rgba(15,23,32,0.9);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  header .wrap{display:flex; align-items:center; justify-content:space-between; height:64px; gap:16px;}
+  .brand{font-weight:600; font-size:1rem; color:var(--text);}
+  .brand span{color:var(--accent);}
+  .header-right{display:flex; align-items:center; gap:20px;}
+  nav ul{display:flex; gap:28px; list-style:none;}
+  nav a{color:var(--muted); font-size:0.92rem; transition:color .15s;}
+  nav a:hover{color:var(--text);}
+  .nav-toggle{display:none; background:none; border:1px solid var(--line); color:var(--text); border-radius:6px; padding:6px 10px; font-size:1rem;}
+  #lang-toggle{
+    background:none; border:1px solid var(--line); color:var(--text);
+    border-radius:6px; padding:6px 12px; font-size:0.82rem; cursor:pointer;
+    transition:border-color .15s, color .15s;
+  }
+  #lang-toggle:hover{border-color:var(--accent); color:var(--accent);}
+
+  #toast{
+    position:fixed; left:50%; bottom:28px; transform:translate(-50%,12px);
+    background:var(--panel); border:1px solid var(--accent); color:var(--text);
+    padding:10px 18px; border-radius:6px; font-size:0.85rem;
+    opacity:0; pointer-events:none; transition:opacity .2s, transform .2s;
+    z-index:50; white-space:nowrap;
+  }
+  #toast.show{opacity:1; transform:translate(-50%,0);}
+
+  section{padding:72px 0;}
+  .hero{padding-top:64px; padding-bottom:56px;}
+  .hero .wrap{display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center;}
+  .eyebrow{color:var(--accent); font-size:0.85rem; margin-bottom:14px;}
+  h1.name{font-size:2.4rem; font-weight:600; line-height:1.15; margin-bottom:10px;}
+  .role{color:var(--muted); font-size:1.05rem; margin-bottom:20px;}
+  .bio{max-width:52ch; color:var(--text); margin-bottom:28px;}
+  .links{display:flex; flex-wrap:wrap; gap:12px;}
+  .btn{
+    border:1px solid var(--line); padding:10px 18px; border-radius:6px;
+    font-size:0.9rem; color:var(--text); transition:border-color .15s, color .15s;
+  }
+  .btn:hover{border-color:var(--accent); color:var(--accent);}
+  .btn.primary{background:var(--accent); color:#0A0A0B; border-color:var(--accent); font-weight:600;}
+  .btn.primary:hover{opacity:0.9; color:#0A0A0B;}
+
+  .photo-frame{
+    position:relative; width:100%; max-width:320px; margin:0 auto;
+    aspect-ratio:1/1; border-radius:12px; overflow:hidden;
+    border:1px solid var(--line); background:var(--panel);
+  }
+  .photo-frame::before{
+    content:""; position:absolute; inset:0; border-radius:12px;
+    box-shadow:inset 0 0 0 1px rgba(212,175,55,0.35);
+    pointer-events:none;
+  }
+  .photo-frame img{width:100%; height:100%; object-fit:cover; display:block;}
+  .query-line{
+    font-family:'IBM Plex Mono', monospace; font-size:0.82rem; color:var(--muted);
+    margin-top:16px; text-align:center;
+  }
+  .query-line .kw{color:var(--accent-2);}
+  .query-line .val{color:var(--accent);}
+
+  h2.section-title{font-size:1.3rem; margin-bottom:8px;}
+  .section-sub{color:var(--muted); font-size:0.95rem; margin-bottom:36px;}
+
+  .skills-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:32px;}
+  .skill-group h3{font-size:0.95rem; color:var(--accent); margin-bottom:14px; font-weight:600;}
+  .tags{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag{border:1px solid var(--line); padding:6px 12px; border-radius:5px; font-size:0.85rem; color:var(--text);}
+
+  .projects{display:flex; flex-direction:column;}
+  .project{
+    display:grid; grid-template-columns:220px 1fr; gap:24px;
+    padding:22px 0; border-bottom:1px solid var(--line);
+  }
+  .project:first-child{border-top:1px solid var(--line);}
+  .project h3{font-size:1rem; font-weight:600; margin-bottom:6px;}
+  .project p{color:var(--muted); font-size:0.92rem; margin-bottom:10px; max-width:56ch;}
+  .project .tags{margin-bottom:8px;}
+  .project .repo-link{font-size:0.85rem; color:var(--accent);}
+  .project .repo-link:hover{text-decoration:underline;}
+  .project-status{color:var(--muted); font-size:0.82rem;}
+
+  footer{border-top:1px solid var(--line); padding:48px 0;}
+  footer .wrap{display:flex; flex-direction:column; gap:14px; align-items:flex-start;}
+  footer .links{gap:20px;}
+  footer .copy{color:var(--muted); font-size:0.82rem; margin-top:8px;}
+
+  @media (max-width:760px){
+    nav{display:none;}
+    .nav-toggle{display:inline-block;}
+    .hero .wrap{grid-template-columns:1fr;}
+    .skills-grid{grid-template-columns:1fr;}
+    .project{grid-template-columns:1fr; gap:8px;}
+    h1.name{font-size:1.9rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="brand">Sergio<span>.</span>Restrepo</div>
+    <div class="header-right">
+      <nav>
+        <ul>
+          <li><a href="#sobre-mi" data-i18n="nav.about">Sobre mí</a></li>
+          <li><a href="#habilidades" data-i18n="nav.skills">Habilidades</a></li>
+          <li><a href="#proyectos" data-i18n="nav.projects">Proyectos</a></li>
+          <li><a href="#contacto" data-i18n="nav.contact">Contacto</a></li>
+        </ul>
+      </nav>
+      <button id="lang-toggle" class="mono" type="button">EN</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow mono" data-i18n="hero.eyebrow">Estudiante de Desarrollo de Software</div>
+      <h1 class="name">Sergio Restrepo Santos</h1>
+      <p class="role">Backend &amp; SQL</p>
+      <p class="bio" data-i18n="hero.bio">Desarrollador en formación, responsable y organizado, con la adaptabilidad y determinación para enfrentar cualquier reto. Actualmente aprendiendo a usar MySQL y consolidando bases en desarrollo backend.</p>
+      <div class="links">
+        <a class="btn primary email-btn" href="mailto:sergioandressasd1@gmail.com" data-i18n="cta.email">Escribir un correo</a>
+        <a class="btn" href="https://www.linkedin.com/in/sergio-andrés-restrepo-santos-929183310" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://github.com/FxFalcon001" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div>
+      <div class="photo-frame">
+        <img src="sergio.png" data-i18n-alt="hero.photoAlt" alt="Foto de Sergio Restrepo Santos">
+      </div>
+      <p class="query-line"><span class="kw">SELECT</span> enfoque <span class="kw">FROM</span> desarrollador <span class="kw">WHERE</span> nombre = <span class="val">'Sergio'</span>;</p>
+    </div>
+  </div>
+</section>
+
+<section id="sobre-mi">
+  <div class="wrap">
+    <h2 class="section-title" data-i18n="about.title">Sobre mí</h2>
+    <p class="section-sub" data-i18n="about.subtitle">Un poco de contexto sobre quién soy y hacia dónde voy.</p>
+    <p class="bio" style="max-width:70ch;" data-i18n="about.body">Soy un aspirante a desarrollador responsable y organizado, con el carácter para tomar cualquier reto que se me presente. Estoy enfocando mi formación en el backend y en bases de datos relacionales, y en este momento estoy aprendiendo MySQL a fondo: desde el diseño de esquemas hasta la normalización de datos.</p>
+  </div>
+</section>
+
+<section id="habilidades">
+  <div class="wrap">
+    <h2 class="section-title" data-i18n="skills.title">Habilidades</h2>
+    <p class="section-sub" data-i18n="skills.subtitle">Lo que vengo construyendo hasta ahora.</p>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h3 data-i18n="skills.group1">Bases de datos</h3>
+        <div class="tags">
+          <span class="tag">MySQL</span>
+          <span class="tag">SQL</span>
+          <span class="tag" data-i18n="tag.er">Modelado E-R</span>
+          <span class="tag" data-i18n="tag.norm">Normalización (3FN)</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h3 data-i18n="skills.group2">Lenguajes &amp; herramientas</h3>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">HTML</span>
+          <span class="tag">CSS</span>
+          <span class="tag">Git &amp; GitHub</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proyectos">
+  <div class="wrap">
+    <h2 class="section-title" data-i18n="projects.title">Proyectos</h2>
+    <p class="section-sub" data-i18n="projects.subtitle">Trabajos académicos y de práctica.</p>
+    <div class="projects">
+
+      <div class="project">
+        <div>
+          <span class="project-status mono" data-i18n="status.academic">académico</span>
+        </div>
+        <div>
+          <h3 data-i18n="proj1.title">Normalización de base de datos — Librería</h3>
+          <p data-i18n="proj1.desc">Normalización hasta Tercera Forma Normal (3FN) de un sistema de librería (libros, clientes, ventas), con diagramas entidad-relación conceptual y UML para definir entidades, atributos y llaves.</p>
+          <div class="tags"><span class="tag">SQL</span><span class="tag" data-i18n="tag.datamodel">Modelado de datos</span><span class="tag" data-i18n="tag.3fn">3FN</span></div>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <span class="project-status mono">GitHub</span>
+        </div>
+        <div>
+          <h3>Fake Store</h3>
+          <p data-i18n="proj2.desc">Simulación de una tienda online para practicar la construcción de una interfaz de e-commerce de principio a fin.</p>
+          <div class="tags"><span class="tag" data-i18n="tag.frontend">Front-end</span><span class="tag" data-i18n="tag.practice">Práctica</span></div>
+          <a class="repo-link" href="https://github.com/FxFalcon001/Fake_Store" target="_blank" rel="noopener" data-i18n="proj.repoLink">Ver repositorio →</a>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <span class="project-status mono">GitHub</span>
+        </div>
+        <div>
+          <h3 data-i18n="proj3.title">Proyecto HTML &amp; CSS</h3>
+          <p data-i18n="proj3.desc">Maquetación de un sitio web trabajando estructura semántica en HTML y estilos en CSS.</p>
+          <div class="tags"><span class="tag">HTML</span><span class="tag">CSS</span></div>
+          <a class="repo-link" href="https://github.com/FxFalcon001/Proyecto_HTML_CSS_" target="_blank" rel="noopener" data-i18n="proj.repoLink">Ver repositorio →</a>
+        </div>
+      </div>
+
+      <div class="project">
+        <div>
+          <span class="project-status mono">GitHub</span>
+        </div>
+        <div>
+          <h3 data-i18n="proj4.title">Proyecto Python (colaborativo)</h3>
+          <p data-i18n="proj4.desc">Proyecto en Python desarrollado junto a Karen Toloza como parte de la formación académica.</p>
+          <div class="tags"><span class="tag">Python</span><span class="tag" data-i18n="tag.teamwork">Trabajo en equipo</span></div>
+          <a class="repo-link" href="https://github.com/FxFalcon001/-Proyecto_Python_RestrepoSergio-Proyecto_Python_RestrepoSergioTolozaKaren-" target="_blank" rel="noopener" data-i18n="proj.repoLink">Ver repositorio →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer id="contacto">
+  <div class="wrap">
+    <h2 class="section-title" data-i18n="footer.title">Contacto</h2>
+    <p class="bio" data-i18n="footer.bio">¿Tienes una oportunidad, un proyecto o simplemente quieres conectar? Escríbeme.</p>
+    <div class="links">
+      <a class="btn primary email-btn" href="mailto:sergioandressasd1@gmail.com">sergioandressasd1@gmail.com</a>
+      <a class="btn" href="https://www.linkedin.com/in/sergio-andrés-restrepo-santos-929183310" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/FxFalcon001" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <p class="copy">© 2026 Sergio Restrepo Santos.</p>
+  </div>
+</footer>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function(){
+  var translations = {
+    "meta.title": {es:"Sergio Restrepo Santos — Portafolio", en:"Sergio Restrepo Santos — Portfolio"},
+    "nav.about": {es:"Sobre mí", en:"About"},
+    "nav.skills": {es:"Habilidades", en:"Skills"},
+    "nav.projects": {es:"Proyectos", en:"Projects"},
+    "nav.contact": {es:"Contacto", en:"Contact"},
+    "hero.eyebrow": {es:"Estudiante de Desarrollo de Software", en:"Software Development Student"},
+    "hero.bio": {es:"Desarrollador en formación, responsable y organizado, con la adaptabilidad y determinación para enfrentar cualquier reto. Actualmente aprendiendo a usar MySQL y consolidando bases en desarrollo backend.", en:"Aspiring developer, responsible and organized, with the adaptability and determination to tackle any challenge. Currently learning MySQL and building a solid foundation in backend development."},
+    "hero.photoAlt": {es:"Foto de Sergio Restrepo Santos", en:"Photo of Sergio Restrepo Santos"},
+    "cta.email": {es:"Escribir un correo", en:"Send an email"},
+    "about.title": {es:"Sobre mí", en:"About me"},
+    "about.subtitle": {es:"Un poco de contexto sobre quién soy y hacia dónde voy.", en:"A bit of context on who I am and where I'm headed."},
+    "about.body": {es:"Soy un aspirante a desarrollador responsable y organizado, con el carácter para tomar cualquier reto que se me presente. Estoy enfocando mi formación en el backend y en bases de datos relacionales, y en este momento estoy aprendiendo MySQL a fondo: desde el diseño de esquemas hasta la normalización de datos.", en:"I'm an aspiring developer, responsible and organized, with the character to take on any challenge that comes my way. I'm focusing my training on backend development and relational databases, and I'm currently learning MySQL in depth: from schema design to data normalization."},
+    "skills.title": {es:"Habilidades", en:"Skills"},
+    "skills.subtitle": {es:"Lo que vengo construyendo hasta ahora.", en:"What I've been building so far."},
+    "skills.group1": {es:"Bases de datos", en:"Databases"},
+    "skills.group2": {es:"Lenguajes &amp; herramientas", en:"Languages &amp; tools"},
+    "tag.er": {es:"Modelado E-R", en:"ER modeling"},
+    "tag.norm": {es:"Normalización (3FN)", en:"Normalization (3NF)"},
+    "projects.title": {es:"Proyectos", en:"Projects"},
+    "projects.subtitle": {es:"Trabajos académicos y de práctica.", en:"Academic and practice work."},
+    "status.academic": {es:"académico", en:"academic"},
+    "proj1.title": {es:"Normalización de base de datos — Librería", en:"Database Normalization — Bookstore"},
+    "proj1.desc": {es:"Normalización hasta Tercera Forma Normal (3FN) de un sistema de librería (libros, clientes, ventas), con diagramas entidad-relación conceptual y UML para definir entidades, atributos y llaves.", en:"Normalization up to Third Normal Form (3NF) of a bookstore system (books, customers, sales), with conceptual and UML entity-relationship diagrams to define entities, attributes and keys."},
+    "tag.datamodel": {es:"Modelado de datos", en:"Data modeling"},
+    "tag.3fn": {es:"3FN", en:"3NF"},
+    "proj2.desc": {es:"Simulación de una tienda online para practicar la construcción de una interfaz de e-commerce de principio a fin.", en:"Simulation of an online store to practice building an e-commerce interface from start to finish."},
+    "tag.frontend": {es:"Front-end", en:"Front-end"},
+    "tag.practice": {es:"Práctica", en:"Practice"},
+    "proj.repoLink": {es:"Ver repositorio →", en:"View repository →"},
+    "proj3.title": {es:"Proyecto HTML &amp; CSS", en:"HTML &amp; CSS Project"},
+    "proj3.desc": {es:"Maquetación de un sitio web trabajando estructura semántica en HTML y estilos en CSS.", en:"Website layout built with semantic HTML structure and CSS styling."},
+    "proj4.title": {es:"Proyecto Python (colaborativo)", en:"Python Project (collaborative)"},
+    "proj4.desc": {es:"Proyecto en Python desarrollado junto a Karen Toloza como parte de la formación académica.", en:"Python project developed together with Karen Toloza as part of academic coursework."},
+    "tag.teamwork": {es:"Trabajo en equipo", en:"Teamwork"},
+    "footer.title": {es:"Contacto", en:"Contact"},
+    "footer.bio": {es:"¿Tienes una oportunidad, un proyecto o simplemente quieres conectar? Escríbeme.", en:"Have an opportunity, a project, or just want to connect? Reach out."},
+    "toast.emailCopied": {es:"Correo copiado: sergioandressasd1@gmail.com", en:"Email copied: sergioandressasd1@gmail.com"}
+  };
+
+  var current = "es";
+  var toggleBtn = document.getElementById("lang-toggle");
+  var i18nEls = document.querySelectorAll("[data-i18n]");
+  var altEls = document.querySelectorAll("[data-i18n-alt]");
+
+  function applyLang(lang){
+    i18nEls.forEach(function(el){
+      var key = el.getAttribute("data-i18n");
+      if (translations[key]) el.innerHTML = translations[key][lang];
+    });
+    altEls.forEach(function(el){
+      var key = el.getAttribute("data-i18n-alt");
+      if (translations[key]) el.setAttribute("alt", translations[key][lang]);
+    });
+    if (translations["meta.title"]) document.title = translations["meta.title"][lang];
+    document.documentElement.setAttribute("lang", lang);
+    toggleBtn.textContent = lang === "es" ? "EN" : "ES";
+    current = lang;
+  }
+
+  toggleBtn.addEventListener("click", function(){
+    applyLang(current === "es" ? "en" : "es");
+  });
+
+  var EMAIL = "sergioandressasd1@gmail.com";
+  var toast = document.getElementById("toast");
+  var toastTimer;
+
+  function copyEmailFallback(text){
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  function showToast(){
+    toast.textContent = translations["toast.emailCopied"][current];
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 2600);
+  }
+
+  document.querySelectorAll(".email-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(EMAIL).catch(function(){ copyEmailFallback(EMAIL); });
+      } else {
+        copyEmailFallback(EMAIL);
+      }
+      showToast();
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
